@@ -485,6 +485,8 @@ export default React.createClass({
     }
     else pages = <View style={pageStyle}>{children}</View>
 
+    const offset = this.props.ignoreOffset ? {} : this.state.offset;
+
     return (
       <View style={[styles.container, {
         width: this.getWidth(),
@@ -493,7 +495,7 @@ export default React.createClass({
         <ScrollView ref="scrollView"
           {...props}
           contentContainerStyle={[styles.wrapper, props.style]}
-          contentOffset={state.offset}
+          contentOffset={offset}
           onScrollBeginDrag={this.onScrollBegin}
           onMomentumScrollEnd={this.onScrollEnd}>
           {pages}
