@@ -10,6 +10,7 @@ import React, {
   View,
   ScrollView,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native'
 
 // Using bare setTimeout, setInterval, setImmediate
@@ -18,7 +19,6 @@ import React, {
 // the component is unmounted, you risk the callback
 // throwing an exception.
 import TimerMixin from 'react-timer-mixin'
-import Dimensions from 'Dimensions'
 
 let { width, height } = Dimensions.get('window')
 
@@ -164,13 +164,16 @@ export default React.createClass({
 
     // Default: horizontal
     initState.dir = props.horizontal == false ? 'y' : 'x'
-    initState.width = props.width || width
-    initState.height = props.height || height
     initState.offset = {}
 
     return initState
   },
-
+  getHeight() {
+    return props.height || height
+  },
+  getWidth() {
+    return props.width || width
+  },
   /**
    * autoplay timer
    * @type {null}
@@ -197,8 +200,8 @@ export default React.createClass({
     if(newState.total > 1) {
       let setup = this.props.loop ? 1 : newState.index
       newState.offset[this.state.dir] = this.state.dir == 'y'
-        ? this.state.height * setup
-        : this.state.width * setup
+        ? this.getHeight() * setup
+        : this.getWidth() * setup
     }
 
     this.setState(newState);
@@ -276,7 +279,7 @@ export default React.createClass({
     let state = this.state
     let index = state.index
     let diff = offset[dir] - state.offset[dir]
-    let step = dir == 'x' ? state.width : state.height
+    let step = dir == 'x' ? getWidth() : getHeight()
 
     // Do nothing if offset no change.
     if(!diff) return
@@ -312,8 +315,8 @@ export default React.createClass({
     let diff = (this.props.loop ? 1 : 0) + index + this.state.index
     let x = 0
     let y = 0
-    if(state.dir == 'x') x = diff * state.width
-    if(state.dir == 'y') y = diff * state.height
+    if(state.dir == 'x') x = diff * getWidth()
+    if(state.dir == 'y') y = diff * getHeight()
     this.refs.scrollView && this.refs.scrollView.scrollTo(y, x)
 
     // update scroll state
@@ -411,7 +414,7 @@ export default React.createClass({
 
   renderButtons() {
     return (
-      <View pointerEvents='box-none' style={[styles.buttonWrapper, {width: this.state.width, height: this.state.height}, this.props.buttonWrapperStyle]}>
+      <View pointerEvents='box-none' style={[styles.buttonWrapper, {width: getWidth(), height: getHeight()}, this.props.buttonWrapperStyle]}>
         {this.renderPrevButton()}
         {this.renderNextButton()}
       </View>
@@ -462,7 +465,7 @@ export default React.createClass({
     let key = 0
 
     let pages = []
-    let pageStyle = [{width: state.width, height: state.height}, styles.slide]
+    let pageStyle = [{width: getWidth(), height: getHeight()}, styles.slide]
 
     // For make infinite at least total > 1
     if(total > 1) {
@@ -482,8 +485,8 @@ export default React.createClass({
 
     return (
       <View style={[styles.container, {
-        width: state.width,
-        height: state.height
+        width: getWidth(),
+        height: getHeight(),
       }]}>
         <ScrollView ref="scrollView"
           {...props}
