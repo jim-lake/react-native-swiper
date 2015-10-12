@@ -4,14 +4,16 @@ react-native-swiper
 
 @author leecade<leecade@163.com>
  */
-import React, {
+
+import React from 'react-native';
+const {
   StyleSheet,
   Text,
   View,
   ScrollView,
   TouchableOpacity,
   Dimensions,
-} from 'react-native'
+} = React;
 
 // Using bare setTimeout, setInterval, setImmediate
 // and requestAnimationFrame calls is very dangerous
@@ -169,10 +171,10 @@ export default React.createClass({
     return initState
   },
   getHeight() {
-    return props.height || height
+    return this.props.height || height
   },
   getWidth() {
-    return props.width || width
+    return this.props.width || width
   },
   /**
    * autoplay timer
@@ -279,7 +281,7 @@ export default React.createClass({
     let state = this.state
     let index = state.index
     let diff = offset[dir] - state.offset[dir]
-    let step = dir == 'x' ? getWidth() : getHeight()
+    let step = dir == 'x' ? this.getWidth() : this.getHeight()
 
     // Do nothing if offset no change.
     if(!diff) return
@@ -315,8 +317,8 @@ export default React.createClass({
     let diff = (this.props.loop ? 1 : 0) + index + this.state.index
     let x = 0
     let y = 0
-    if(state.dir == 'x') x = diff * getWidth()
-    if(state.dir == 'y') y = diff * getHeight()
+    if(state.dir == 'x') x = diff * this.getWidth()
+    if(state.dir == 'y') y = diff * this.getHeight()
     this.refs.scrollView && this.refs.scrollView.scrollTo(y, x)
 
     // update scroll state
@@ -414,7 +416,7 @@ export default React.createClass({
 
   renderButtons() {
     return (
-      <View pointerEvents='box-none' style={[styles.buttonWrapper, {width: getWidth(), height: getHeight()}, this.props.buttonWrapperStyle]}>
+      <View pointerEvents='box-none' style={[styles.buttonWrapper, {width: this.getWidth(), height: this.getHeight()}, this.props.buttonWrapperStyle]}>
         {this.renderPrevButton()}
         {this.renderNextButton()}
       </View>
@@ -465,7 +467,7 @@ export default React.createClass({
     let key = 0
 
     let pages = []
-    let pageStyle = [{width: getWidth(), height: getHeight()}, styles.slide]
+    let pageStyle = [{width: this.getWidth(), height: this.getHeight()}, styles.slide]
 
     // For make infinite at least total > 1
     if(total > 1) {
@@ -485,8 +487,8 @@ export default React.createClass({
 
     return (
       <View style={[styles.container, {
-        width: getWidth(),
-        height: getHeight(),
+        width: this.getWidth(),
+        height: this.getHeight(),
       }]}>
         <ScrollView ref="scrollView"
           {...props}
